@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=70"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "breast-cancer-data-mining-labs"
+version = "1.0.0"
+description = "Data Mining laboratory works on the WDBC dataset"
+requires-python = ">=3.11"
+dependencies = [
+  "matplotlib>=3.10,<4",
+  "mlxtend>=0.23,<1",
+  "networkx>=3.4,<4",
+  "numpy>=2.0,<3",
+  "pandas>=2.2,<4",
+  "scikit-learn>=1.6,<2",
+  "scipy>=1.15,<2",
+  "xgboost>=3.0,<4",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

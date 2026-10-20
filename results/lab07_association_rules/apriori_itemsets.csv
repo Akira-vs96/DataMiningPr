@@ -1,0 +1,263 @@
+support,itemsets,length
+0.6274165202108963,diagnosis=benign,1
+0.5008787346221442,mean_radius=high,1
+0.5008787346221442,mean_texture=high,1
+0.5008787346221442,mean_smoothness=high,1
+0.5008787346221442,mean_compactness=high,1
+0.5008787346221442,mean_concavity=high,1
+0.5008787346221442,mean_concave_points=high,1
+0.5008787346221442,worst_radius=high,1
+0.5008787346221442,worst_texture=high,1
+0.4991212653778559,mean_radius=low,1
+0.4991212653778559,mean_texture=low,1
+0.4991212653778559,mean_smoothness=low,1
+0.4991212653778559,mean_compactness=low,1
+0.4991212653778559,mean_concavity=low,1
+0.4991212653778559,mean_concave_points=low,1
+0.4991212653778559,worst_radius=low,1
+0.4991212653778559,worst_texture=low,1
+0.48857644991212656,"diagnosis=benign, worst_radius=low",2
+0.4797891036906854,"diagnosis=benign, mean_concave_points=low",2
+0.47451669595782076,"diagnosis=benign, mean_concavity=low",2
+0.4710017574692443,"mean_radius=high, worst_radius=high",2
+0.46924428822495606,"mean_radius=low, worst_radius=low",2
+0.46924428822495606,"diagnosis=benign, mean_radius=low",2
+0.45869947275922673,"diagnosis=benign, mean_radius=low, worst_radius=low",3
+0.44991212653778556,"mean_concave_points=high, mean_concavity=high",2
+0.44815465729349735,"mean_concave_points=low, mean_concavity=low",2
+0.4446397188049209,"diagnosis=benign, mean_compactness=low",2
+0.4428822495606327,"mean_compactness=high, mean_concavity=high",2
+0.44112478031634444,"mean_compactness=low, mean_concavity=low",2
+0.4288224956063269,"diagnosis=benign, mean_concave_points=low, mean_concavity=low",3
+0.4253075571177504,"mean_texture=high, worst_texture=high",2
+0.4235500878734622,"mean_texture=low, worst_texture=low",2
+0.4235500878734622,"mean_compactness=high, mean_concave_points=high",2
+0.421792618629174,"mean_compactness=low, mean_concave_points=low",2
+0.4182776801405975,"diagnosis=benign, mean_texture=low",2
+0.4182776801405975,"diagnosis=benign, mean_compactness=low, mean_concavity=low",3
+0.4147627416520211,"diagnosis=benign, worst_texture=low",2
+0.4130052724077329,"mean_concave_points=high, worst_radius=high",2
+0.4112478031634446,"mean_concave_points=low, worst_radius=low",2
+0.4094903339191564,"diagnosis=benign, mean_concave_points=low, worst_radius=low",3
+0.4077328646748682,"mean_compactness=low, mean_concave_points=low, mean_concavity=low",3
+0.40597539543058,"mean_compactness=high, mean_concave_points=high, mean_concavity=high",3
+0.40421792618629176,"diagnosis=benign, mean_compactness=low, mean_concave_points=low",3
+0.39718804920913886,"mean_concave_points=high, mean_radius=high",2
+0.3954305799648506,"mean_concave_points=low, mean_radius=low",2
+0.3936731107205624,"diagnosis=benign, mean_concave_points=low, mean_radius=low",3
+0.39015817223198596,"mean_concavity=high, worst_radius=high",2
+0.39015817223198596,"mean_concave_points=low, mean_radius=low, worst_radius=low",3
+0.3884007029876977,"mean_concavity=low, worst_radius=low",2
+0.3884007029876977,"mean_concave_points=high, mean_radius=high, worst_radius=high",3
+0.3866432337434095,"mean_concave_points=high, mean_concavity=high, worst_radius=high",3
+0.38488576449912126,"diagnosis=benign, mean_smoothness=low",2
+0.38488576449912126,"diagnosis=benign, mean_concavity=low, worst_radius=low",3
+0.37258347978910367,diagnosis=malignant,1
+0.37258347978910367,"mean_concavity=high, mean_radius=high",2
+0.37082601054481545,"mean_concavity=low, mean_radius=low",2
+0.37082601054481545,"diagnosis=benign, mean_texture=low, worst_texture=low",3
+0.36906854130052724,"mean_compactness=high, mean_smoothness=high",2
+0.36906854130052724,"mean_concave_points=high, mean_concavity=high, mean_radius=high",3
+0.36731107205623903,"mean_compactness=low, mean_smoothness=low",2
+0.36731107205623903,"diagnosis=benign, mean_concavity=low, mean_radius=low",3
+0.3655536028119508,"mean_concavity=low, mean_radius=low, worst_radius=low",3
+0.3655536028119508,"mean_concavity=high, mean_radius=high, worst_radius=high",3
+0.36379613356766255,"mean_compactness=high, worst_radius=high",2
+0.36379613356766255,"mean_concave_points=low, mean_concavity=low, worst_radius=low",3
+0.36203866432337434,"mean_compactness=low, worst_radius=low",2
+0.36203866432337434,"diagnosis=malignant, worst_radius=high",2
+0.3585237258347979,"diagnosis=benign, mean_compactness=low, worst_radius=low",3
+0.35500878734622143,"mean_compactness=high, mean_concave_points=high, worst_radius=high",3
+0.3532513181019332,"diagnosis=malignant, mean_concave_points=high",2
+0.34973637961335674,"mean_compactness=high, mean_concavity=high, worst_radius=high",3
+0.34797891036906853,"mean_concave_points=high, mean_smoothness=high",2
+0.34797891036906853,"diagnosis=malignant, mean_concavity=high",2
+0.34797891036906853,"mean_concave_points=low, mean_concavity=low, mean_radius=low",3
+0.34797891036906853,"diagnosis=malignant, mean_concave_points=high, mean_concavity=high",3
+0.3462214411247803,"mean_concave_points=low, mean_smoothness=low",2
+0.3444639718804921,"mean_compactness=high, mean_radius=high",2
+0.3444639718804921,"mean_compactness=low, mean_concavity=low, worst_radius=low",3
+0.3444639718804921,"diagnosis=malignant, mean_concave_points=high, worst_radius=high",3
+0.3427065026362039,"mean_compactness=low, mean_radius=low",2
+0.3427065026362039,"diagnosis=malignant, mean_radius=high",2
+0.3427065026362039,"diagnosis=malignant, mean_radius=high, worst_radius=high",3
+0.3427065026362039,"mean_compactness=low, mean_concave_points=low, worst_radius=low",3
+0.3409490333919156,"diagnosis=malignant, mean_concavity=high, worst_radius=high",3
+0.3391915641476274,"mean_concavity=high, mean_smoothness=high",2
+0.3391915641476274,"mean_compactness=low, mean_radius=low, worst_radius=low",3
+0.3391915641476274,"diagnosis=benign, mean_compactness=low, mean_radius=low",3
+0.3374340949033392,"mean_concavity=low, mean_smoothness=low",2
+0.3374340949033392,"mean_compactness=high, mean_concave_points=high, mean_radius=high",3
+0.3374340949033392,"mean_compactness=high, mean_radius=high, worst_radius=high",3
+0.3321616871704745,"mean_texture=high, worst_radius=high",2
+0.3321616871704745,"worst_radius=high, worst_texture=high",2
+0.3304042179261863,"mean_texture=low, worst_radius=low",2
+0.3304042179261863,"worst_radius=low, worst_texture=low",2
+0.3304042179261863,"mean_compactness=high, mean_concavity=high, mean_radius=high",3
+0.3286467486818981,"mean_concavity=high, mean_texture=high",2
+0.3286467486818981,"diagnosis=benign, worst_radius=low, worst_texture=low",3
+0.3268892794376098,"mean_concavity=low, mean_texture=low",2
+0.3268892794376098,"mean_compactness=low, mean_concavity=low, mean_radius=low",3
+0.3268892794376098,"diagnosis=benign, mean_concave_points=low, mean_smoothness=low",3
+0.3251318101933216,"mean_compactness=low, mean_concave_points=low, mean_radius=low",3
+0.3251318101933216,"diagnosis=malignant, mean_concave_points=high, mean_radius=high",3
+0.3251318101933216,"diagnosis=benign, mean_concavity=low, mean_texture=low",3
+0.3251318101933216,"diagnosis=benign, mean_texture=low, worst_radius=low",3
+0.3251318101933216,"mean_compactness=low, mean_concavity=low, mean_smoothness=low",3
+0.3233743409490334,"mean_radius=high, mean_texture=high",2
+0.3233743409490334,"mean_compactness=high, mean_concavity=high, mean_smoothness=high",3
+0.3216168717047452,"mean_radius=low, mean_texture=low",2
+0.3216168717047452,"diagnosis=malignant, mean_concavity=high, mean_radius=high",3
+0.31985940246045697,"mean_radius=high, worst_texture=high",2
+0.31985940246045697,"diagnosis=benign, mean_compactness=low, mean_smoothness=low",3
+0.31985940246045697,"mean_compactness=high, mean_concave_points=high, mean_smoothness=high",3
+0.31985940246045697,"mean_concave_points=high, mean_concavity=high, mean_smoothness=high",3
+0.3181019332161687,"mean_radius=low, worst_texture=low",2
+0.3181019332161687,"mean_concave_points=high, mean_texture=high",2
+0.3181019332161687,"diagnosis=malignant, mean_compactness=high",2
+0.3181019332161687,"mean_radius=high, mean_texture=high, worst_radius=high",3
+0.3181019332161687,"mean_compactness=low, mean_concave_points=low, mean_smoothness=low",3
+0.3163444639718805,"mean_concave_points=low, mean_texture=low",2
+0.3163444639718805,"mean_concave_points=high, worst_texture=high",2
+0.3163444639718805,"diagnosis=benign, mean_concave_points=low, mean_texture=low",3
+0.3163444639718805,"diagnosis=malignant, mean_compactness=high, mean_concavity=high",3
+0.3163444639718805,"diagnosis=malignant, mean_compactness=high, mean_concave_points=high",3
+0.3145869947275923,"mean_compactness=high, mean_texture=high",2
+0.3145869947275923,"mean_concavity=high, worst_texture=high",2
+0.3145869947275923,"mean_concave_points=low, worst_texture=low",2
+0.3145869947275923,"mean_radius=high, worst_radius=high, worst_texture=high",3
+0.3145869947275923,"mean_concave_points=low, mean_concavity=low, mean_smoothness=low",3
+0.3145869947275923,"diagnosis=benign, mean_concavity=low, mean_smoothness=low",3
+0.31282952548330406,"mean_compactness=low, mean_texture=low",2
+0.31282952548330406,"mean_concavity=low, worst_texture=low",2
+0.31282952548330406,"diagnosis=benign, mean_radius=low, worst_texture=low",3
+0.31282952548330406,"diagnosis=benign, mean_concave_points=low, worst_texture=low",3
+0.3110720562390158,"mean_compactness=high, worst_texture=high",2
+0.3110720562390158,"diagnosis=malignant, mean_compactness=high, worst_radius=high",3
+0.3093145869947276,"mean_compactness=low, worst_texture=low",2
+0.3093145869947276,"diagnosis=benign, mean_radius=low, mean_texture=low",3
+0.3093145869947276,"diagnosis=benign, mean_concavity=low, worst_texture=low",3
+0.30579964850615116,"mean_radius=low, mean_texture=low, worst_radius=low",3
+0.30579964850615116,"mean_radius=low, worst_radius=low, worst_texture=low",3
+0.30404217926186294,"diagnosis=benign, mean_compactness=low, mean_texture=low",3
+0.3022847100175747,"mean_concave_points=high, mean_concavity=high, mean_texture=high",3
+0.29701230228471004,"mean_compactness=high, mean_concavity=high, mean_texture=high",3
+0.29525483304042177,"mean_texture=high, worst_radius=high, worst_texture=high",3
+0.29525483304042177,"diagnosis=benign, mean_compactness=low, worst_texture=low",3
+0.29525483304042177,"mean_concave_points=high, mean_concavity=high, worst_texture=high",3
+0.29349736379613356,"mean_smoothness=high, worst_radius=high",2
+0.29173989455184535,"diagnosis=malignant, mean_texture=high",2
+0.29173989455184535,"mean_smoothness=low, worst_radius=low",2
+0.29173989455184535,"diagnosis=malignant, mean_compactness=high, mean_radius=high",3
+0.29173989455184535,"mean_concave_points=low, mean_concavity=low, mean_texture=low",3
+0.29173989455184535,"mean_texture=low, worst_radius=low, worst_texture=low",3
+0.28998242530755713,"diagnosis=benign, mean_smoothness=low, worst_radius=low",3
+0.28822495606326887,"diagnosis=malignant, worst_texture=high",2
+0.28822495606326887,"mean_concavity=low, mean_texture=low, worst_texture=low",3
+0.28822495606326887,"mean_concave_points=high, mean_texture=high, worst_radius=high",3
+0.28822495606326887,"mean_concave_points=high, mean_smoothness=high, worst_radius=high",3
+0.28646748681898065,"mean_radius=high, mean_texture=high, worst_texture=high",3
+0.28646748681898065,"mean_compactness=low, mean_concavity=low, mean_texture=low",3
+0.28646748681898065,"diagnosis=malignant, mean_texture=high, worst_radius=high",3
+0.28646748681898065,"mean_compactness=high, mean_concavity=high, worst_texture=high",3
+0.28471001757469244,"mean_concave_points=high, worst_radius=high, worst_texture=high",3
+0.28295254833040423,"mean_compactness=high, mean_concave_points=high, mean_texture=high",3
+0.28295254833040423,"mean_concavity=high, mean_texture=high, worst_radius=high",3
+0.28295254833040423,"mean_compactness=high, mean_concave_points=high, worst_texture=high",3
+0.28295254833040423,"mean_concave_points=low, mean_concavity=low, worst_texture=low",3
+0.27943760984182775,"mean_radius=low, mean_texture=low, worst_texture=low",3
+0.27943760984182775,"mean_concave_points=low, mean_texture=low, worst_texture=low",3
+0.27943760984182775,"mean_compactness=low, mean_concavity=low, worst_texture=low",3
+0.27943760984182775,"diagnosis=malignant, worst_radius=high, worst_texture=high",3
+0.27768014059753954,"mean_radius=high, mean_smoothness=high",2
+0.27768014059753954,"mean_concave_points=high, mean_radius=high, mean_texture=high",3
+0.27768014059753954,"mean_compactness=low, mean_texture=low, worst_texture=low",3
+0.27768014059753954,"mean_concavity=high, mean_texture=high, worst_texture=high",3
+0.27768014059753954,"mean_concave_points=high, mean_texture=high, worst_texture=high",3
+0.27768014059753954,"mean_concavity=high, mean_smoothness=high, worst_radius=high",3
+0.2759226713532513,"mean_radius=low, mean_smoothness=low",2
+0.2759226713532513,"mean_concavity=high, worst_radius=high, worst_texture=high",3
+0.2741652021089631,"diagnosis=benign, mean_radius=low, mean_smoothness=low",3
+0.2741652021089631,"diagnosis=malignant, mean_radius=high, mean_texture=high",3
+0.2741652021089631,"mean_concave_points=low, worst_radius=low, worst_texture=low",3
+0.27240773286467485,"mean_concave_points=low, mean_texture=low, worst_radius=low",3
+0.27240773286467485,"diagnosis=malignant, mean_concave_points=high, mean_texture=high",3
+0.27240773286467485,"mean_compactness=high, mean_smoothness=high, worst_radius=high",3
+0.27065026362038663,"mean_radius=low, mean_smoothness=low, worst_radius=low",3
+0.27065026362038663,"mean_concavity=high, mean_radius=high, mean_texture=high",3
+0.27065026362038663,"mean_concave_points=high, mean_radius=high, mean_smoothness=high",3
+0.27065026362038663,"mean_concave_points=high, mean_radius=high, worst_texture=high",3
+0.27065026362038663,"mean_compactness=low, mean_concave_points=low, mean_texture=low",3
+0.27065026362038663,"mean_compactness=high, mean_texture=high, worst_texture=high",3
+0.27065026362038663,"diagnosis=malignant, mean_concave_points=high, worst_texture=high",3
+0.2688927943760984,"mean_radius=high, mean_smoothness=high, worst_radius=high",3
+0.2688927943760984,"diagnosis=malignant, mean_concavity=high, mean_texture=high",3
+0.2671353251318102,"diagnosis=malignant, mean_concavity=high, worst_texture=high",3
+0.26537785588752194,"mean_concavity=low, mean_texture=low, worst_radius=low",3
+0.26537785588752194,"mean_compactness=low, mean_concave_points=low, worst_texture=low",3
+0.26362038664323373,"diagnosis=malignant, mean_radius=high, worst_texture=high",3
+0.26362038664323373,"mean_compactness=high, mean_texture=high, worst_radius=high",3
+0.26362038664323373,"mean_concave_points=low, mean_smoothness=low, worst_radius=low",3
+0.2618629173989455,"mean_smoothness=high, worst_texture=high",2
+0.2601054481546573,"mean_smoothness=low, worst_texture=low",2
+0.2601054481546573,"mean_concave_points=low, mean_radius=low, worst_texture=low",3
+0.2601054481546573,"mean_concavity=high, mean_radius=high, mean_smoothness=high",3
+0.2601054481546573,"mean_concavity=high, mean_radius=high, worst_texture=high",3
+0.2601054481546573,"diagnosis=malignant, mean_texture=high, worst_texture=high",3
+0.2601054481546573,"mean_compactness=high, worst_radius=high, worst_texture=high",3
+0.2583479789103691,"diagnosis=malignant, mean_smoothness=high",2
+0.2583479789103691,"mean_concave_points=low, mean_radius=low, mean_texture=low",3
+0.2583479789103691,"diagnosis=malignant, mean_concave_points=high, mean_smoothness=high",3
+0.2583479789103691,"mean_concavity=low, worst_radius=low, worst_texture=low",3
+0.2565905096660808,"diagnosis=malignant, mean_concavity=high, mean_smoothness=high",3
+0.2548330404217926,"mean_compactness=high, mean_radius=high, mean_smoothness=high",3
+0.2513181019332162,"mean_smoothness=high, mean_texture=high",2
+0.2513181019332162,"mean_concavity=low, mean_radius=low, mean_texture=low",3
+0.2513181019332162,"mean_compactness=high, mean_radius=high, mean_texture=high",3
+0.2513181019332162,"mean_compactness=low, mean_smoothness=low, worst_radius=low",3
+0.2513181019332162,"diagnosis=malignant, mean_compactness=high, mean_smoothness=high",3
+0.24956063268892795,"mean_smoothness=low, mean_texture=low",2
+0.24956063268892795,"mean_smoothness=high, mean_texture=low",2
+0.24956063268892795,"mean_smoothness=low, mean_texture=high",2
+0.24956063268892795,"mean_concave_points=low, mean_radius=low, mean_smoothness=low",3
+0.24956063268892795,"diagnosis=malignant, mean_smoothness=high, worst_radius=high",3
+0.2478031634446397,"diagnosis=malignant, mean_compactness=high, worst_texture=high",3
+0.2460456942003515,"diagnosis=malignant, mean_compactness=high, mean_texture=high",3
+0.24428822495606328,"mean_concavity=low, mean_radius=low, worst_texture=low",3
+0.24428822495606328,"mean_compactness=high, mean_radius=high, worst_texture=high",3
+0.24428822495606328,"mean_compactness=low, mean_texture=low, worst_radius=low",3
+0.24428822495606328,"mean_compactness=low, worst_radius=low, worst_texture=low",3
+0.24253075571177504,"diagnosis=benign, mean_smoothness=high",2
+0.24253075571177504,"mean_concavity=low, mean_smoothness=low, worst_radius=low",3
+0.2390158172231986,"mean_smoothness=low, worst_texture=high",2
+0.2390158172231986,"mean_smoothness=high, worst_texture=low",2
+0.23725834797891038,"diagnosis=benign, mean_smoothness=low, worst_texture=low",3
+0.23374340949033393,"mean_compactness=low, mean_radius=low, mean_smoothness=low",3
+0.23374340949033393,"diagnosis=benign, mean_smoothness=low, mean_texture=low",3
+0.23022847100175747,"diagnosis=malignant, mean_radius=high, mean_smoothness=high",3
+0.22847100175746923,"mean_compactness=low, mean_radius=low, mean_texture=low",3
+0.22847100175746923,"mean_compactness=low, mean_radius=low, worst_texture=low",3
+0.22671353251318102,"mean_concavity=low, mean_radius=low, mean_smoothness=low",3
+0.22319859402460457,"mean_radius=low, mean_smoothness=high",2
+0.22319859402460457,"mean_radius=high, mean_smoothness=low",2
+0.22144112478031636,"mean_smoothness=low, mean_texture=low, worst_texture=low",3
+0.22144112478031636,"mean_compactness=high, mean_smoothness=high, worst_texture=high",3
+0.2179261862917399,"mean_compactness=low, mean_smoothness=low, mean_texture=low",3
+0.2179261862917399,"mean_compactness=low, mean_smoothness=low, worst_texture=low",3
+0.2179261862917399,"mean_concave_points=high, mean_smoothness=high, worst_texture=high",3
+0.21441124780316345,"mean_compactness=high, mean_smoothness=high, mean_texture=high",3
+0.21441124780316345,"mean_smoothness=high, mean_texture=high, worst_texture=high",3
+0.2126537785588752,"diagnosis=benign, worst_texture=high",2
+0.2126537785588752,"mean_concavity=high, mean_smoothness=high, mean_texture=high",3
+0.210896309314587,"mean_smoothness=low, mean_texture=high, worst_texture=high",3
+0.210896309314587,"mean_concavity=high, mean_smoothness=high, worst_texture=high",3
+0.20913884007029876,"diagnosis=benign, mean_texture=high",2
+0.20913884007029876,"mean_concave_points=high, mean_smoothness=high, mean_texture=high",3
+0.20738137082601055,"mean_smoothness=low, worst_radius=high",2
+0.20738137082601055,"mean_smoothness=high, worst_radius=low",2
+0.2056239015817223,"mean_concave_points=low, mean_smoothness=low, mean_texture=low",3
+0.2056239015817223,"mean_concave_points=low, mean_smoothness=low, worst_texture=low",3
+0.2038664323374341,"mean_concavity=low, mean_smoothness=low, mean_texture=low",3
+0.20210896309314588,"mean_radius=high, mean_smoothness=low, worst_radius=high",3
+0.20210896309314588,"mean_smoothness=high, mean_texture=low, worst_texture=low",3
+0.20210896309314588,"mean_concavity=low, mean_smoothness=low, worst_texture=low",3
