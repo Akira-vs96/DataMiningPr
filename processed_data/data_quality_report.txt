@@ -1,0 +1,32 @@
+Bread basket dataset quality report
+====================================
+
+Input rows: 20507
+Rows after normalization: 20507
+Rows after exact-duplicate removal: 18887
+Invalid rows removed: 0
+Exact duplicate rows removed: 1620
+
+Missing values before cleaning:
+  Transaction: 0
+  Item: 0
+  date_time: 0
+  period_day: 0
+  weekday_weekend: 0
+
+Missing-value handling:
+  No missing values were present in the source dataset.
+  If a categorical value had been empty, it would be set to 'unknown'.
+  Rows with missing/invalid transaction, item, or datetime were excluded.
+
+Normalization:
+  Headers converted to snake_case.
+  Text whitespace trimmed; categorical values lowercased.
+  transaction converted to integer text; date_time converted to ISO format.
+
+Outlier check (transaction item count, Tukey 1.5*IQR rule):
+  Transactions: 9465
+  Q1: 1.00; Q3: 3.00; IQR: 2.00
+  Bounds: -2.00 to 6.00
+  Outlier transactions flagged: 27
+  Outliers were flagged, not deleted, because large baskets can be valid purchases.
