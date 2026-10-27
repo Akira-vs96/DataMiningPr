@@ -1,0 +1,31 @@
+{
+  "python": "3.13.5",
+  "packages": {
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "matplotlib": "3.11.2",
+    "scikit-learn": "1.9.1",
+    "statsmodels": "0.15.0",
+    "shap": "0.54.1",
+    "lime": "0.2.0.1",
+    "river": "0.26.1",
+    "networkx": "3.7"
+  },
+  "variant": 1,
+  "random_state": 42,
+  "sources_sha256": {
+    "data/raw/electricity_monthly_eia.json": "4de93c4a3d29e5cc17064c7ea3e6c8de9845a9d4341bc3131fb8ace157170890"
+  },
+  "horizon": 24,
+  "selected_order": [
+    1,
+    1,
+    0
+  ],
+  "seasonal_order": [
+    0,
+    1,
+    1,
+    12
+  ]
+}

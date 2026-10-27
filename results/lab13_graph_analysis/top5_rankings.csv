@@ -1,0 +1,6 @@
+rank,degree_centrality,closeness,betweenness,pagerank
+1,33,0,0,33
+2,0,2,33,0
+3,32,33,32,32
+4,2,31,2,2
+5,1,8,31,1

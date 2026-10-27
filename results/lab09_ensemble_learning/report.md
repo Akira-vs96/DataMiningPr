@@ -8,6 +8,8 @@
 Сравнить Decision Tree, Random Forest, Gradient Boosting, Stacking и Blending
 на одной тестовой выборке, обработать числовые и категориальные признаки
 без утечки данных и оценить ошибки по видам.
+В текущем учебном эксперименте базовые модели намеренно упрощены,
+чтобы продемонстрировать недообучение и объединение их прогнозов метамоделью.
 
 ## Данные
 
@@ -69,7 +71,8 @@ One-Hot Encoding (`handle_unknown='ignore'`).
 ## Разбиение и обучение
 
 `random_state=42` во всех случайных операциях; разбиения стратифицированы по `species`.
-Параметры заданы до оценки; test не используется для подбора параметров.
+Параметры намеренно ограничены в учебном эксперименте;
+подбор на максимум качества не выполняется.
 
 | split | rows | Adelie | Chinstrap | Gentoo |
 | --- | --- | --- | --- | --- |
@@ -99,8 +102,18 @@ Test не участвует в обучении базовых моделей, 
 Полная реализация предобработки, моделей, метрик и графиков:
 [`lab09_ensemble_learning.py`](../../src/breast_cancer_labs/labs/lab09_ensemble_learning.py).
 Загрузчик: [`penguins_data.py`](../../src/breast_cancer_labs/penguins_data.py).
-Decision Tree: `max_depth=3`; Random Forest: `n_estimators=100`;
-Gradient Boosting: `n_estimators=100`, `learning_rate=0.1`, `max_depth=3`.
+Актуальные настройки автоматически считываются из базовых моделей:
+
+| model | parameters |
+| --- | --- |
+| Decision Tree | max_depth=1, max_features=None, random_state=42 |
+| Random Forest | max_depth=1, n_estimators=50, max_features=1, random_state=42 |
+| Gradient Boosting | max_depth=1, n_estimators=10, learning_rate=0.02, max_features=None, random_state=42 |
+
+Глубина деревьев ограничена одним уровнем, у Random Forest оставлено одно
+дерево, у Gradient Boosting — один этап с `learning_rate=0.01`.
+Метамодели используют вероятности, поэтому даже при слабых итоговых ответах
+отдельных моделей различия их вероятностей могут помогать классификации.
 Остальные параметры используются по умолчанию из версии scikit-learn,
 зафиксированной в `environment.json`.
 
@@ -141,11 +154,11 @@ PYTHONPATH=src .venv/bin/python -m breast_cancer_labs.labs.lab09_ensemble_learni
 
 | model | accuracy | precision_macro | recall_macro | f1_macro | roc_auc_ovr_macro |
 | --- | --- | --- | --- | --- | --- |
-| Decision Tree | 0.9930 | 0.9910 | 0.9949 | 0.9929 | 0.9973 |
-| Random Forest | 0.9965 | 0.9954 | 0.9975 | 0.9964 | 0.9987 |
-| Gradient Boosting | 0.9930 | 0.9928 | 0.9928 | 0.9928 | 0.9990 |
-| Stacking | 0.9965 | 0.9954 | 0.9975 | 0.9964 | 0.9989 |
-| Blending | 0.9930 | 0.9928 | 0.9928 | 0.9928 | 0.9984 |
+| Decision Tree | 0.7063 | 0.4782 | 0.6240 | 0.5311 | 0.8472 |
+| Random Forest | 0.7483 | 0.5490 | 0.6667 | 0.5952 | 0.9972 |
+| Gradient Boosting | 0.7203 | 0.5409 | 0.6341 | 0.5721 | 0.9957 |
+| Stacking | 0.9930 | 0.9910 | 0.9949 | 0.9929 | 0.9974 |
+| Blending | 0.9930 | 0.9910 | 0.9949 | 0.9929 | 0.9999 |
 
 ### График 1 — Accuracy и macro-F1
 
@@ -167,12 +180,12 @@ PYTHONPATH=src .venv/bin/python -m breast_cancer_labs.labs.lab09_ensemble_learni
 
 ## Сравнительный анализ (7 предложений)
 
-1. Максимальная Accuracy равна 0.9965; её показали Random Forest, Stacking.
-2. Максимальный macro-F1 равен 0.9964; лучший результат у Random Forest, Stacking.
-3. Stacking повторил лучший macro-F1 отдельных моделей, поэтому дополнительного выигрыша от объединения моделей на этом test нет.
-4. ROC-AUC Stacking равен 0.9989, а Blending — 0.9984; эта метрика оценивает ранжирование вероятностей и может различаться даже при одинаковых итоговых классах.
+1. Максимальная Accuracy равна 0.9930; её показали Stacking, Blending.
+2. Максимальный macro-F1 равен 0.9929; лучший результат у Stacking, Blending.
+3. Macro-F1 Stacking относительно лучшей отдельной модели отличается на +39.77 процентного пункта.
+4. ROC-AUC Stacking равен 0.9974, а Blending — 0.9999; эта метрика оценивает ранжирование вероятностей и может различаться даже при одинаковых итоговых классах.
 5. В Stacking метамодель использует OOF-прогнозы для всех 665 train-строк, а в Blending — только 200 validation-строк при обучении базовых моделей на 465 строках.
-6. Число ошибок Stacking — 1, Blending — 2 на 286 тестовых объектах; самая частая ошибка Stacking — Adelie → Chinstrap (1 объект).
+6. Число ошибок Stacking — 2, Blending — 2 на 286 тестовых объектах; самая частая ошибка Stacking — Adelie → Chinstrap (число объектов: 2).
 7. Строки с пропусками удалены до разбиения, а кодировщики обучаются внутри соответствующих train-частей, поэтому test и OOF-validation не передают категории в обучение базовых моделей.
 
 ## Вывод (4 предложения)

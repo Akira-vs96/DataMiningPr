@@ -1,0 +1,19 @@
+{
+  "source_row": 87,
+  "test_position": 4,
+  "actual_class": 1,
+  "predicted_class": 1,
+  "class_name": "class_1",
+  "probabilities": [
+    0.0,
+    1.0,
+    0.0
+  ],
+  "maximum_test_confidence": 1.0,
+  "confidence_ties": 3,
+  "shap_base_probability": 0.4010651629072683,
+  "shap_sum": 0.598934837092732,
+  "lime_local_r2": 0.5080880623259536,
+  "lime_intercept": 0.30613116470931456,
+  "lime_local_prediction": 1.0513058820739265
+}

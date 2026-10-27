@@ -67,10 +67,28 @@ def build_preprocessor() -> ColumnTransformer:
 
 
 def build_base_models() -> list[tuple[str, Pipeline]]:
+    """Intentionally weak models for the requested underfitting experiment."""
     classifiers = [
-        ("dt", DecisionTreeClassifier(max_depth=3, random_state=RANDOM_STATE)),
-        ("rf", RandomForestClassifier(n_estimators=100, random_state=RANDOM_STATE, n_jobs=2)),
-        ("gb", GradientBoostingClassifier(n_estimators=100, random_state=RANDOM_STATE)),
+        ("dt", DecisionTreeClassifier(max_depth=1, random_state=RANDOM_STATE)),
+        (
+            "rf",
+            RandomForestClassifier(
+                n_estimators=50,
+                max_depth=1,
+                max_features=1,
+                random_state=RANDOM_STATE,
+                n_jobs=5,
+            ),
+        ),
+        (
+            "gb",
+            GradientBoostingClassifier(
+                n_estimators=10,
+                learning_rate=0.02,
+                max_depth=1,
+                random_state=RANDOM_STATE,
+            ),
+        ),
     ]
     return [
         (name, Pipeline([("preprocessing", build_preprocessor()), ("classifier", model)]))
@@ -176,6 +194,16 @@ def markdown_table(table: pd.DataFrame) -> str:
 
 
 def write_report(output_dir, raw, data, scores, distribution, missing, splits, matrices) -> None:
+    parameter_rows = []
+    for name, pipeline in build_base_models():
+        parameters = pipeline.named_steps["classifier"].get_params(deep=False)
+        settings = ", ".join(
+            f"{key}={parameters[key]}"
+            for key in ["max_depth", "n_estimators", "learning_rate", "max_features", "random_state"]
+            if key in parameters
+        )
+        parameter_rows.append({"model": MODEL_NAMES[name], "parameters": settings})
+    parameter_table = markdown_table(pd.DataFrame(parameter_rows))
     accuracy_winners = scores.loc[np.isclose(scores.accuracy, scores.accuracy.max()), "model"]
     f1_winners = scores.loc[np.isclose(scores.f1_macro, scores.f1_macro.max()), "model"]
     indexed = scores.set_index("model")
@@ -189,7 +217,7 @@ def write_report(output_dir, raw, data, scores, distribution, missing, splits, m
     actual, predicted = np.unravel_index(off_diagonal.argmax(), off_diagonal.shape)
     confusion_description = (
         f"самая частая ошибка Stacking — {SPECIES[actual]} → {SPECIES[predicted]} "
-        f"({off_diagonal[actual, predicted]} объект)"
+        f"(число объектов: {off_diagonal[actual, predicted]})"
         if off_diagonal.any() else "Stacking правильно определил все виды"
     )
     stack_comparison = (
@@ -210,6 +238,8 @@ def write_report(output_dir, raw, data, scores, distribution, missing, splits, m
 Сравнить Decision Tree, Random Forest, Gradient Boosting, Stacking и Blending
 на одной тестовой выборке, обработать числовые и категориальные признаки
 без утечки данных и оценить ошибки по видам.
+В текущем учебном эксперименте базовые модели намеренно упрощены,
+чтобы продемонстрировать недообучение и объединение их прогнозов метамоделью.
 
 ## Данные
 
@@ -259,7 +289,8 @@ One-Hot Encoding (`handle_unknown='ignore'`).
 ## Разбиение и обучение
 
 `random_state={RANDOM_STATE}` во всех случайных операциях; разбиения стратифицированы по `species`.
-Параметры заданы до оценки; test не используется для подбора параметров.
+Параметры намеренно ограничены в учебном эксперименте;
+подбор на максимум качества не выполняется.
 
 {markdown_table(splits)}
 
@@ -284,8 +315,14 @@ Test не участвует в обучении базовых моделей, 
 Полная реализация предобработки, моделей, метрик и графиков:
 [`lab09_ensemble_learning.py`](../../src/breast_cancer_labs/labs/lab09_ensemble_learning.py).
 Загрузчик: [`penguins_data.py`](../../src/breast_cancer_labs/penguins_data.py).
-Decision Tree: `max_depth=3`; Random Forest: `n_estimators=100`;
-Gradient Boosting: `n_estimators=100`, `learning_rate=0.1`, `max_depth=3`.
+Актуальные настройки автоматически считываются из базовых моделей:
+
+{parameter_table}
+
+Глубина деревьев ограничена одним уровнем, у Random Forest оставлено одно
+дерево, у Gradient Boosting — один этап с `learning_rate=0.01`.
+Метамодели используют вероятности, поэтому даже при слабых итоговых ответах
+отдельных моделей различия их вероятностей могут помогать классификации.
 Остальные параметры используются по умолчанию из версии scikit-learn,
 зафиксированной в `environment.json`.
 
@@ -472,6 +509,11 @@ def main() -> None:
         "missing_values_policy": "drop_rows_before_split",
         "rows_before_cleaning": len(raw), "rows_removed": len(removed), "rows_after_cleaning": len(data),
         "processed_dataset": "data/processed/penguins_clean.csv",
+        "experiment": "intentionally_weak_base_models",
+        "base_model_parameters": {
+            MODEL_NAMES[name]: pipeline.named_steps["classifier"].get_params(deep=False)
+            for name, pipeline in base_models
+        },
     }
     (output_dir / "environment.json").write_text(json.dumps(environment, indent=2) + "\n", encoding="utf-8")
 

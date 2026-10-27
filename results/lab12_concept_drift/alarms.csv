@@ -1,0 +1,17 @@
+strategy,config,detector,time,date
+frozen,sensitive,Page-Hinkley,131,2014-05-12
+frozen,conservative,Page-Hinkley,169,2014-06-19
+frozen,sensitive,Page-Hinkley,174,2014-06-24
+frozen,sensitive,Page-Hinkley,304,2014-11-01
+frozen,sensitive,ADWIN,347,2014-12-14
+frozen,conservative,Page-Hinkley,355,2014-12-22
+online,sensitive,Page-Hinkley,161,2014-06-11
+online,conservative,Page-Hinkley,200,2014-07-20
+online,sensitive,ADWIN,251,2014-09-09
+online,conservative,ADWIN,283,2014-10-11
+online,sensitive,Page-Hinkley,358,2014-12-25
+reset_adwin,sensitive,Page-Hinkley,131,2014-05-12
+reset_adwin,conservative,Page-Hinkley,169,2014-06-19
+reset_adwin,sensitive,Page-Hinkley,174,2014-06-24
+reset_adwin,sensitive,Page-Hinkley,304,2014-11-01
+reset_adwin,sensitive,ADWIN,347,2014-12-14

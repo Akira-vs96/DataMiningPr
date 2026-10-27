@@ -1,0 +1,29 @@
+{
+  "python": "3.13.5",
+  "packages": {
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "matplotlib": "3.11.2",
+    "scikit-learn": "1.9.1",
+    "statsmodels": "0.15.0",
+    "shap": "0.54.1",
+    "lime": "0.2.0.1",
+    "river": "0.26.1",
+    "networkx": "3.7"
+  },
+  "variant": 1,
+  "random_state": 42,
+  "sources_sha256": {
+    "data/raw/elecdaily.csv": "55cdd6cf1debd5fa7ac08c6ccffedefc64c3a4da7b4a2bd8e3c98f1e166aecb9"
+  },
+  "train_n": 219,
+  "calibration_n": 73,
+  "test_n": 73,
+  "ridge_alpha": 10,
+  "interval_targets": [
+    0.8,
+    0.9,
+    0.95
+  ],
+  "exchangeability_guarantee_claimed": false
+}

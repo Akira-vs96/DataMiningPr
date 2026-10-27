@@ -21,7 +21,7 @@ src/breast_cancer_labs/
   penguins_data.py              # загрузка Penguins и удаление строк с пропусками
   config.py                    # пути к данным и каталогам результатов
   plotting.py                  # общие настройки графиков
-  labs/                        # лабораторные №1–5, №7–9 с функцией main()
+  labs/                        # лабораторные №1–5, №7–15 с функцией main()
 results/
   lab01_preprocessing/         # таблицы, графики и report.md
   ...
@@ -43,6 +43,20 @@ tests/                         # проверки данных и защиты �
 9. Вариант 1: классификация видов Penguins; Decision Tree, Random Forest,
    Gradient Boosting, Stacking (5-fold OOF) и Blending (hold-out),
    метамодель Logistic Regression.
+10. Вариант 1: месячное электропотребление США (EIA), SARIMA и сезонный baseline,
+    ADF, ACF/PACF, временная валидация и прогноз на 24 месяца.
+11. Вариант 1: Wine, Random Forest, общая важность, SHAP и LIME для самого
+    уверенного прогноза тестовой выборки.
+12. Вариант 1: дневное электропотребление и температура; контролируемое искусственное
+    снижение потребления на реальных данных, ADWIN/Page–Hinkley и онлайн регрессия.
+13. Вариант 1: Karate Club, четыре центральности, сравнение топ-5 и Louvain.
+14. Вариант 1: реальные научные аннотации OpenAlex, LDA/NMF с 3 и 5 темами.
+15. Вариант 1: суточное электропотребление, Ridge и conformal-интервалы 80/90/95%,
+    хронологические train/calibration/test и оценка покрытия по сезонам.
+
+Другие варианты практик 10–15 не реализованы. Исходные задания находятся
+в файлах `Data_Mining_Practica_10.docx`–`Data_Mining_Practica_15.docx` в корне.
+Источники новых данных и единицы измерения описаны в [data/raw/README.md](data/raw/README.md).
 
 ## Архитектура
 
@@ -60,6 +74,19 @@ tests/                         # проверки данных и защиты �
 и только на base-train в Blending. Существующие работы используют WDBC.
 
 ## Запуск
+
+Только практики 10–15, вариант 1 (готовые данные уже сохранены, интернет не нужен):
+
+```bash
+.venv/bin/python run_all.py --labs 10 11 12 13 14 15
+```
+
+Отчёты: [№10](results/lab10_time_series/report.md),
+[№11](results/lab11_explainable_ai/report.md),
+[№12](results/lab12_concept_drift/report.md),
+[№13](results/lab13_graph_analysis/report.md),
+[№14](results/lab14_topic_modeling/report.md),
+[№15](results/lab15_prediction_intervals/report.md).
 
 В репозитории уже есть окружение `.venv` с необходимыми зависимостями:
 

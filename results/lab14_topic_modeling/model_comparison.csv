@@ -1,0 +1,5 @@
+method,topics,documents,terms,train_perplexity,tfidf_reconstruction_error,iterations,zero_topic_rows
+LDA,3,58,772,779.2991160669278,,60,0
+NMF,3,58,772,,7.186315699403541,219,0
+LDA,5,58,772,818.3892573338201,,60,0
+NMF,5,58,772,,6.964048450368462,71,0

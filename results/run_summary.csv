@@ -7,3 +7,9 @@ lab,name,status,duration_seconds
 07,Association rules,success,0.631
 08,Gradient Boosting and XGBoost,success,1.544
 09,Penguins: Stacking and Blending (variant 1),success,4.343
+10,Electricity: SARIMA (variant 1),success,1.924
+11,Wine: SHAP and LIME (variant 1),success,2.067
+12,Electricity: concept drift (variant 1),success,0.736
+13,Karate Club: graph analysis (variant 1),success,0.48
+14,Scientific abstracts: LDA and NMF (variant 1),success,2.103
+15,Electricity: conformal intervals (variant 1),success,0.655
