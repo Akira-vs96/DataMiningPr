@@ -21,6 +21,7 @@ from breast_cancer_labs.labs import (  # noqa: E402
     lab05_clustering,
     lab07_association_rules,
     lab08_boosting,
+    lab09_ensemble_learning,
 )
 
 
@@ -32,6 +33,7 @@ LABS = [
     ("05", "Clustering", lab05_clustering.main),
     ("07", "Association rules", lab07_association_rules.main),
     ("08", "Gradient Boosting and XGBoost", lab08_boosting.main),
+    ("09", "Penguins: Stacking and Blending (variant 1)", lab09_ensemble_learning.main),
 ]
 
 
@@ -59,8 +61,9 @@ def main() -> None:
     )
     index = f"""# Результаты лабораторных работ
 
-Все результаты сгенерированы командой `.venv/bin/python run_all.py` на едином
-датасете Breast Cancer Wisconsin Diagnostic.
+Все результаты сгенерированы командой `.venv/bin/python run_all.py`.
+Лабораторные №1–5, №7 и №8 используют Breast Cancer Wisconsin Diagnostic;
+практическая №9 (вариант 1) — Penguins из `data/raw/archive.zip`.
 
 {report_links}
 

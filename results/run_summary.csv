@@ -1,8 +1,9 @@
 lab,name,status,duration_seconds
-01,Preprocessing,success,0.872
-02,Correlation,success,1.948
-03,Linear regression,success,0.548
-04,Hypothesis testing,success,0.285
-05,Clustering,success,2.381
-07,Association rules,success,0.711
-08,Gradient Boosting and XGBoost,success,1.53
+01,Preprocessing,success,0.469
+02,Correlation,success,0.776
+03,Linear regression,success,0.344
+04,Hypothesis testing,success,0.153
+05,Clustering,success,1.971
+07,Association rules,success,0.631
+08,Gradient Boosting and XGBoost,success,1.544
+09,Penguins: Stacking and Blending (variant 1),success,4.343

@@ -1,25 +1,30 @@
 # Лабораторные работы по Data Mining
 
-Проект полностью унифицирован вокруг набора **Breast Cancer Wisconsin
-Diagnostic (WDBC)**. Все лабораторные используют один загрузчик, одну схему из
-30 числовых признаков и единый target: `diagnosis` (`B` — benign,
-`M` — malignant).
+Лабораторные №1–5, №7 и №8 используют **Breast Cancer Wisconsin
+Diagnostic (WDBC)**: общий загрузчик, 30 числовых признаков и target
+`diagnosis` (`B` — benign, `M` — malignant).
+Практическая №9, вариант 1, использует предоставленный **Penguins** из
+`archive.zip`: 1000 строк, 4 числовых и 2 категориальных признака,
+target `species` (Adelie, Chinstrap, Gentoo).
 
 ## Структура
 
 ```text
 data/
-  raw/                         # единственный исходный датасет WDBC
+  raw/                         # исходные ZIP: WDBC и archive.zip (Penguins)
   processed/                   # данные, подготовленные лабораторной №1
 docs/assignments/              # исходные методические материалы
 src/breast_cancer_labs/
-  data.py                      # загрузка, валидация и очистка
-  labs/                        # лабораторные №1–5, №7 и №8
+  data.py                      # загрузка, валидация и очистка WDBC
+  penguins_data.py              # загрузка Penguins; пропуски сохраняются для Pipeline
+  config.py                    # пути к данным и каталогам результатов
+  plotting.py                  # общие настройки графиков
+  labs/                        # лабораторные №1–5, №7–9 с функцией main()
 results/
   lab01_preprocessing/         # таблицы, графики и report.md
   ...
 run_all.py                     # последовательный запуск всех работ
-tests/                         # проверки общей схемы данных
+tests/                         # проверки данных и защиты от утечки в №9
 ```
 
 Лабораторной №6 в исходном проекте не было, поэтому она не добавлялась.
@@ -33,6 +38,23 @@ tests/                         # проверки общей схемы данн
 5. K-means, Agglomerative, DBSCAN и PCA-визуализация.
 7. Apriori и FP-Growth на дискретизированных клинических признаках.
 8. Gradient Boosting и XGBoost для классификации диагноза.
+9. Вариант 1: классификация видов Penguins; Decision Tree, Random Forest,
+   Gradient Boosting, Stacking (5-fold OOF) и Blending (hold-out),
+   метамодель Logistic Regression.
+
+## Архитектура
+
+Каждая работа — отдельный модуль в `src/breast_cancer_labs/labs/` с точкой
+входа `main()`. `run_all.py` последовательно вызывает работы, записывает
+`results/run_summary.csv` и обновляет оглавление результатов. Общие пути
+хранятся в `config.py`, оформление графиков — в `plotting.py`.
+Каждый модуль сохраняет CSV, PNG и русскоязычный `report.md` в свой каталог.
+
+Загрузчики WDBC и Penguins разделены, поскольку задачи имеют разные схемы
+и целевые переменные. Для №9 заполнение пропусков и кодирование категорий
+встроены в каждую базовую модель через `Pipeline` и `ColumnTransformer`:
+это позволяет обучать предобработку отдельно в каждом OOF-фолде Stacking
+и только на base-train в Blending. Существующие работы используют WDBC.
 
 ## Запуск
 
@@ -55,6 +77,17 @@ python3 -m venv .venv
 ```bash
 PYTHONPATH=src .venv/bin/python -m breast_cancer_labs.labs.lab05_clustering
 ```
+
+Практическая №9, вариант 1:
+
+```bash
+PYTHONPATH=src .venv/bin/python -m breast_cancer_labs.labs.lab09_ensemble_learning
+```
+
+Готовый [отчёт №9](results/lab09_ensemble_learning/report.md) включает описание
+данных, предобработку, код моделей, метрики, два графика и сравнительный анализ.
+Исходное задание находится в `docs/assignments/practical_09.docx`,
+предоставленный датасет — в `data/raw/archive.zip`.
 
 Проверки:
 

@@ -1,0 +1,14 @@
+{
+  "python": "3.13.5",
+  "numpy": "2.5.4",
+  "pandas": "3.0.6",
+  "scikit_learn": "1.9.1",
+  "matplotlib": "3.11.2",
+  "dataset_archive": "data/raw/archive.zip",
+  "dataset_member": "Penguin Species Prediction Dataset.csv",
+  "dataset_sha256": "39e14ec98926ac4a42993de60de758d16a82abed2c4d30464618d25ced706fc2",
+  "random_state": 42,
+  "test_size": 0.3,
+  "blending_validation_fraction_of_train": 0.3,
+  "stacking_folds": 5
+}

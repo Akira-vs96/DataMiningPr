@@ -7,6 +7,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DATA_ARCHIVE = PROJECT_ROOT / "data" / "raw" / "breast_cancer_wisconsin_diagnostic.zip"
+PENGUINS_ARCHIVE = PROJECT_ROOT / "data" / "raw" / "archive.zip"
 PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
 RESULTS_DIR = PROJECT_ROOT / "results"
 
