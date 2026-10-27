@@ -1,46 +1,46 @@
 model,actual_species,predicted_species,count
-Decision Tree,Adelie,Adelie,136
+Decision Tree,Adelie,Adelie,130
 Decision Tree,Adelie,Chinstrap,2
 Decision Tree,Adelie,Gentoo,0
-Decision Tree,Chinstrap,Adelie,1
-Decision Tree,Chinstrap,Chinstrap,74
+Decision Tree,Chinstrap,Adelie,0
+Decision Tree,Chinstrap,Chinstrap,72
 Decision Tree,Chinstrap,Gentoo,0
 Decision Tree,Gentoo,Adelie,0
 Decision Tree,Gentoo,Chinstrap,0
-Decision Tree,Gentoo,Gentoo,87
-Random Forest,Adelie,Adelie,138
-Random Forest,Adelie,Chinstrap,0
+Decision Tree,Gentoo,Gentoo,82
+Random Forest,Adelie,Adelie,131
+Random Forest,Adelie,Chinstrap,1
 Random Forest,Adelie,Gentoo,0
-Random Forest,Chinstrap,Adelie,1
-Random Forest,Chinstrap,Chinstrap,74
+Random Forest,Chinstrap,Adelie,0
+Random Forest,Chinstrap,Chinstrap,72
 Random Forest,Chinstrap,Gentoo,0
 Random Forest,Gentoo,Adelie,0
 Random Forest,Gentoo,Chinstrap,0
-Random Forest,Gentoo,Gentoo,87
-Gradient Boosting,Adelie,Adelie,138
-Gradient Boosting,Adelie,Chinstrap,0
+Random Forest,Gentoo,Gentoo,82
+Gradient Boosting,Adelie,Adelie,131
+Gradient Boosting,Adelie,Chinstrap,1
 Gradient Boosting,Adelie,Gentoo,0
 Gradient Boosting,Chinstrap,Adelie,1
-Gradient Boosting,Chinstrap,Chinstrap,74
+Gradient Boosting,Chinstrap,Chinstrap,71
 Gradient Boosting,Chinstrap,Gentoo,0
 Gradient Boosting,Gentoo,Adelie,0
 Gradient Boosting,Gentoo,Chinstrap,0
-Gradient Boosting,Gentoo,Gentoo,87
-Stacking,Adelie,Adelie,138
-Stacking,Adelie,Chinstrap,0
+Gradient Boosting,Gentoo,Gentoo,82
+Stacking,Adelie,Adelie,131
+Stacking,Adelie,Chinstrap,1
 Stacking,Adelie,Gentoo,0
-Stacking,Chinstrap,Adelie,1
-Stacking,Chinstrap,Chinstrap,74
+Stacking,Chinstrap,Adelie,0
+Stacking,Chinstrap,Chinstrap,72
 Stacking,Chinstrap,Gentoo,0
 Stacking,Gentoo,Adelie,0
 Stacking,Gentoo,Chinstrap,0
-Stacking,Gentoo,Gentoo,87
-Blending,Adelie,Adelie,138
-Blending,Adelie,Chinstrap,0
+Stacking,Gentoo,Gentoo,82
+Blending,Adelie,Adelie,131
+Blending,Adelie,Chinstrap,1
 Blending,Adelie,Gentoo,0
 Blending,Chinstrap,Adelie,1
-Blending,Chinstrap,Chinstrap,74
+Blending,Chinstrap,Chinstrap,71
 Blending,Chinstrap,Gentoo,0
 Blending,Gentoo,Adelie,0
 Blending,Gentoo,Chinstrap,0
-Blending,Gentoo,Gentoo,87
+Blending,Gentoo,Gentoo,82

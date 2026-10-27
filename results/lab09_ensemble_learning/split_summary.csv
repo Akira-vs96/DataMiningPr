@@ -1,5 +1,5 @@
 split,rows,Adelie,Chinstrap,Gentoo
-train,700,323,176,201
-test,300,138,75,87
-blending_base,490,226,123,141
-blending_validation,210,97,53,60
+train,665,306,168,191
+test,286,132,72,82
+blending_base,465,214,117,134
+blending_validation,200,92,51,57

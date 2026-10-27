@@ -19,7 +19,6 @@ from sklearn.ensemble import (
     RandomForestClassifier,
     StackingClassifier,
 )
-from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (
     ConfusionMatrixDisplay,
@@ -36,7 +35,7 @@ from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.tree import DecisionTreeClassifier
 
-from breast_cancer_labs.config import PENGUINS_ARCHIVE, prepare_output_dir
+from breast_cancer_labs.config import PENGUINS_ARCHIVE, PROCESSED_DIR, prepare_output_dir
 from breast_cancer_labs.data import RANDOM_STATE
 from breast_cancer_labs.penguins_data import (
     CATEGORICAL_FEATURES,
@@ -44,7 +43,8 @@ from breast_cancer_labs.penguins_data import (
     FEATURE_NAMES,
     NUMERIC_FEATURES,
     SPECIES,
-    load_penguins_dataset,
+    load_raw_penguins_dataset,
+    remove_incomplete_rows,
 )
 from breast_cancer_labs.plotting import apply_style, save_figure
 
@@ -53,16 +53,13 @@ MODEL_NAMES = {"dt": "Decision Tree", "rf": "Random Forest", "gb": "Gradient Boo
 
 
 def build_preprocessor() -> ColumnTransformer:
-    """Each cloned base pipeline learns its own medians, modes and categories."""
+    """Encode categories on each training subset; numeric values pass unchanged."""
     return ColumnTransformer(
         [
-            ("numeric", SimpleImputer(strategy="median"), NUMERIC_FEATURES),
+            ("numeric", "passthrough", NUMERIC_FEATURES),
             (
                 "categorical",
-                make_pipeline(
-                    SimpleImputer(strategy="most_frequent"),
-                    OneHotEncoder(handle_unknown="ignore", sparse_output=False),
-                ),
+                OneHotEncoder(handle_unknown="ignore", sparse_output=False),
                 CATEGORICAL_FEATURES,
             ),
         ]
@@ -178,7 +175,7 @@ def markdown_table(table: pd.DataFrame) -> str:
     )
 
 
-def write_report(output_dir, data, scores, distribution, missing, splits, matrices) -> None:
+def write_report(output_dir, raw, data, scores, distribution, missing, splits, matrices) -> None:
     accuracy_winners = scores.loc[np.isclose(scores.accuracy, scores.accuracy.max()), "model"]
     f1_winners = scores.loc[np.isclose(scores.f1_macro, scores.f1_macro.max()), "model"]
     indexed = scores.set_index("model")
@@ -187,6 +184,19 @@ def write_report(output_dir, data, scores, distribution, missing, splits, matric
     blend = indexed.loc["Blending"]
     stacking_errors = int(matrices["Stacking"].sum() - np.trace(matrices["Stacking"]))
     blending_errors = int(matrices["Blending"].sum() - np.trace(matrices["Blending"]))
+    off_diagonal = matrices["Stacking"].copy()
+    np.fill_diagonal(off_diagonal, 0)
+    actual, predicted = np.unravel_index(off_diagonal.argmax(), off_diagonal.shape)
+    confusion_description = (
+        f"самая частая ошибка Stacking — {SPECIES[actual]} → {SPECIES[predicted]} "
+        f"({off_diagonal[actual, predicted]} объект)"
+        if off_diagonal.any() else "Stacking правильно определил все виды"
+    )
+    stack_comparison = (
+        "Stacking повторил лучший macro-F1 отдельных моделей, поэтому дополнительного выигрыша от объединения моделей на этом test нет"
+        if np.isclose(stack.f1_macro, base_best)
+        else f"Macro-F1 Stacking относительно лучшей отдельной модели отличается на {(stack.f1_macro - base_best) * 100:+.2f} процентного пункта"
+    )
     counts = splits.set_index("split")["rows"]
     train_size, test_size = int(counts["train"]), int(counts["test"])
     base_size, valid_size = int(counts["blending_base"]), int(counts["blending_validation"])
@@ -205,9 +215,10 @@ def write_report(output_dir, data, scores, distribution, missing, splits, matric
 
 Источник эксперимента — предоставленный пользователем архив
 [`archive.zip`](../../data/raw/archive.zip), файл `{DATA_MEMBER}`.
-В методичке указан Palmer Penguins, однако здесь используется именно
-предоставленная таблица: **{len(data)} строк, {len(FEATURE_NAMES)} признаков и 3 класса**.
-В архиве нет описания происхождения и способа формирования этих 1000 строк;
+В методичке указан Palmer Penguins; в этой работе используется
+предоставленная таблица: **{len(raw)} исходных строк, {len(FEATURE_NAMES)} признаков и 3 класса**.
+После удаления строк с пропусками осталось **{len(data)} полных наблюдений**.
+В архиве нет описания происхождения и способа формирования этих {len(raw)} строк;
 его результаты относятся к этой версии данных.
 Исходное задание: [практическая №9](../../docs/assignments/practical_09.docx).
 
@@ -215,9 +226,13 @@ def write_report(output_dir, data, scores, distribution, missing, splits, matric
 Числовые признаки: `culmen_length_mm` (длина клюва), `culmen_depth_mm`
 (глубина клюва), `flipper_length_mm` (длина ласта), `body_mass_g` (масса).
 Категориальные признаки: `island` (остров) и `sex` (пол).
-Точных дубликатов строк: **{int(data.duplicated().sum())}**;
-строк хотя бы с одним пропуском: **{int(data.isna().any(axis=1).sum())}**.
-Строки сохранены; `species` и номер строки не включаются в признаки.
+Точных дубликатов в очищенной таблице: **{int(data.duplicated().sum())}**.
+Удалены **{len(raw) - len(data)} строк** хотя бы с одним пропуском;
+оставшиеся строки содержат **{int(data.isna().sum().sum())} пропусков**.
+Полные наблюдения сохранены в
+[`penguins_clean.csv`](../../data/processed/penguins_clean.csv),
+исключённые исходные строки и причины удаления — в `removed_rows.csv`.
+`species` и номер строки не включаются в признаки.
 
 ### Баланс классов
 
@@ -227,14 +242,16 @@ def write_report(output_dir, data, scores, distribution, missing, splits, matric
 macro-F1, macro-Precision, macro-Recall и multiclass ROC-AUC (OvR, macro).
 Macro-усреднение придаёт одинаковый вес каждому виду.
 
-### Пропуски до предобработки
+### Пропуски до и после удаления строк
 
 {markdown_table(missing)}
 
-Числовые пропуски заполняются медианой, категориальные — наиболее частым
-значением; затем применяется One-Hot Encoding (`handle_unknown='ignore'`).
+Применяется удаление неполных наблюдений: `raw.dropna()` до разбиения на выборки.
+Значения не заполняются; `SimpleImputer` исключён из всех моделей.
+Числовые признаки передаются без изменений, категориальные кодируются через
+One-Hot Encoding (`handle_unknown='ignore'`).
 `ColumnTransformer` находится внутри каждого базового `Pipeline`.
-Для отдельных моделей статистики обучаются на train, для Stacking — заново
+Для отдельных моделей кодировщик обучается на train, для Stacking — заново
 внутри обучающей части каждого OOF-фолда, для Blending — на base-train.
 Метамодель использует `StandardScaler` и `LogisticRegression(max_iter=2000)`;
 масштабирование метапризнаков обучается вместе с метамоделью.
@@ -256,10 +273,10 @@ Macro-усреднение придаёт одинаковый вес каждо
   После этого базовые модели сохраняются без переобучения.
 - **Test:** общие {test_size} строк для итоговой оценки всех пяти моделей.
 
-Распределение каждой исходной строки записано в `data_split.csv`:
+Распределение каждой сохранённой строки записано в `data_split.csv`:
 `source_row` — индекс строки данных с нуля, `oof_fold` — номер фолда,
 в котором строка служит OOF-validation, `blending_role` — base или validation.
-Test не участвует в обучении базовых моделей, импьютеров, кодировщиков,
+Test не участвует в обучении базовых моделей, кодировщиков,
 масштабирования или метамоделей.
 
 ## Код моделей и воспроизведение
@@ -331,18 +348,18 @@ PYTHONPATH=src .venv/bin/python -m breast_cancer_labs.labs.lab09_ensemble_learni
 
 1. Максимальная Accuracy равна {scores.accuracy.max():.4f}; её показали {', '.join(accuracy_winners)}.
 2. Максимальный macro-F1 равен {scores.f1_macro.max():.4f}; лучший результат у {', '.join(f1_winners)}.
-3. Macro-F1 Stacking относительно лучшей отдельной модели отличается на {(stack.f1_macro - base_best) * 100:+.2f} процентного пункта, поэтому преимущество ансамбля оценивается по фактическим результатам.
-4. Macro-F1 Blending относительно Stacking отличается на {(blend.f1_macro - stack.f1_macro) * 100:+.2f} процентного пункта; возможные причины различий — меньший объём обучения базовых моделей и метамодели при hold-out, а также конкретное разбиение данных.
+3. {stack_comparison}.
+4. ROC-AUC Stacking равен {stack.roc_auc_ovr_macro:.4f}, а Blending — {blend.roc_auc_ovr_macro:.4f}; эта метрика оценивает ранжирование вероятностей и может различаться даже при одинаковых итоговых классах.
 5. В Stacking метамодель использует OOF-прогнозы для всех {train_size} train-строк, а в Blending — только {valid_size} validation-строк при обучении базовых моделей на {base_size} строках.
-6. Матрицы ошибок показывают {stacking_errors} ошибок у Stacking и {blending_errors} у Blending на общей тестовой выборке из {test_size} пингвинов.
-7. Предобработка обучается внутри соответствующих train-частей, поэтому test и OOF-validation не передают статистики заполнения пропусков или кодирования в обучение базовых моделей.
+6. Число ошибок Stacking — {stacking_errors}, Blending — {blending_errors} на {test_size} тестовых объектах; {confusion_description}.
+7. Строки с пропусками удалены до разбиения, а кодировщики обучаются внутри соответствующих train-частей, поэтому test и OOF-validation не передают категории в обучение базовых моделей.
 
 ## Вывод (4 предложения)
 
-Выполнена многоклассовая классификация видов пингвинов с числовыми и категориальными признаками.
+Выполнена многоклассовая классификация видов пингвинов на {len(data)} полных наблюдениях после удаления {len(raw) - len(data)} строк с пропусками.
 Сравнение всех пяти моделей проведено на одном стратифицированном тестовом разбиении с Accuracy, macro-F1 и дополнительными метриками.
 Stacking использует OOF-вероятности, а Blending — отдельную validation-часть, что меняет объём данных для обучения метамодели.
-Результаты характеризуют один фиксированный split предоставленного архива; оценка устойчивости потребовала бы повторных разбиений внутри train и независимого внешнего теста.
+Результаты характеризуют один фиксированный split полных наблюдений; удаление строк изменяет состав test, поэтому сравнение с прежним заполнением пропусков не является оценкой на одинаковой тестовой выборке.
 
 ## Сохранённые материалы
 
@@ -351,6 +368,7 @@ Stacking использует OOF-вероятности, а Blending — отд
 - `data_split.csv`, `split_summary.csv` — роли строк и состав выборок.
 - `blending_validation_features.csv` — validation-метапризнаки Blending и целевой класс.
 - `missing_values.csv`, `class_distribution.csv`, `descriptive_statistics.csv` — описание данных.
+- `removed_rows.csv` — исключённые исходные строки с перечнем отсутствующих полей.
 - `environment.json` — версии библиотек, параметры разбиения и SHA-256 входного архива.
 """
     (output_dir / "report.md").write_text(report, encoding="utf-8")
@@ -358,8 +376,16 @@ Stacking использует OOF-вероятности, а Blending — отд
 
 def main() -> None:
     apply_style()
-    data = load_penguins_dataset()
+    raw = load_raw_penguins_dataset()
+    data = remove_incomplete_rows(raw)
     output_dir = prepare_output_dir("lab09_ensemble_learning")
+    PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
+    data.to_csv(PROCESSED_DIR / "penguins_clean.csv")
+    removed = raw.loc[~raw.index.isin(data.index)].copy()
+    removed["missing_columns"] = removed.isna().apply(
+        lambda row: ", ".join(row.index[row]), axis=1
+    )
+    removed.to_csv(output_dir / "removed_rows.csv")
     X, y = data[FEATURE_NAMES], data["species"]
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.30, random_state=RANDOM_STATE, stratify=y,
@@ -413,8 +439,10 @@ def main() -> None:
 
     counts = y.value_counts().reindex(SPECIES)
     distribution = pd.DataFrame({"species": SPECIES, "count": counts.to_numpy(), "share": (counts / len(y)).to_numpy()})
-    missing = data.isna().sum().rename_axis("column").reset_index(name="missing_count")
-    missing["missing_share"] = missing["missing_count"] / len(data)
+    missing = raw.isna().sum().rename_axis("column").reset_index(name="missing_count_before")
+    missing["missing_share_before"] = missing["missing_count_before"] / len(raw)
+    missing["missing_count_after"] = missing["column"].map(data.isna().sum())
+    missing["missing_share_after"] = missing["missing_count_after"] / len(data)
     distribution.to_csv(output_dir / "class_distribution.csv", index=False)
     missing.to_csv(output_dir / "missing_values.csv", index=False)
     data[NUMERIC_FEATURES].describe().to_csv(output_dir / "descriptive_statistics.csv")
@@ -441,6 +469,9 @@ def main() -> None:
         "dataset_sha256": hashlib.sha256(PENGUINS_ARCHIVE.read_bytes()).hexdigest(),
         "random_state": RANDOM_STATE, "test_size": 0.30,
         "blending_validation_fraction_of_train": 0.30, "stacking_folds": 5,
+        "missing_values_policy": "drop_rows_before_split",
+        "rows_before_cleaning": len(raw), "rows_removed": len(removed), "rows_after_cleaning": len(data),
+        "processed_dataset": "data/processed/penguins_clean.csv",
     }
     (output_dir / "environment.json").write_text(json.dumps(environment, indent=2) + "\n", encoding="utf-8")
 
@@ -448,7 +479,7 @@ def main() -> None:
     positions = np.arange(len(scores))
     for offset, metric, label, color in [(-0.19, "accuracy", "Accuracy", "#457b9d"), (0.19, "f1_macro", "Macro-F1", "#2a9d8f")]:
         bars = axis.bar(positions + offset, scores[metric], width=0.38, label=label, color=color)
-        axis.bar_label(bars, fmt="%.3f", fontsize=8, padding=3)
+        axis.bar_label(bars, fmt="%.4f", fontsize=8, padding=3)
     axis.set(xticks=positions, xticklabels=scores.model, ylim=(0, 1.10), ylabel="Test metric value", title="Penguins: base models, Stacking and Blending")
     axis.tick_params(axis="x", labelrotation=15)
     axis.legend(loc="lower right")
@@ -465,7 +496,8 @@ def main() -> None:
     axes.flat[-1].axis("off")
     save_figure(fig, output_dir / "confusion_matrices.png")
 
-    write_report(output_dir, data, scores, distribution, missing, splits, matrices)
+    write_report(output_dir, raw, data, scores, distribution, missing, splits, matrices)
+    print(f"Rows: {len(raw)} source, {len(removed)} removed, {len(data)} complete")
     print(scores.round(4).to_string(index=False))
     print(f"Report: {output_dir / 'report.md'}")
 

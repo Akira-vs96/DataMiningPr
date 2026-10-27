@@ -25,20 +25,26 @@ from breast_cancer_labs.penguins_data import (
     NUMERIC_FEATURES,
     SPECIES,
     load_penguins_dataset,
+    load_raw_penguins_dataset,
+    remove_incomplete_rows,
 )
 
 
 class PenguinsDatasetTests(unittest.TestCase):
-    def test_supplied_archive_and_missing_values_are_preserved(self) -> None:
+    def test_incomplete_source_rows_are_removed_without_changing_values(self) -> None:
+        raw = load_raw_penguins_dataset()
         data = load_penguins_dataset()
-        self.assertEqual(data.shape, (1000, 7))
-        self.assertEqual(data.species.value_counts().to_dict(), {"Adelie": 461, "Gentoo": 288, "Chinstrap": 251})
-        self.assertEqual(int(data.isna().sum().sum()), 50)
+        self.assertEqual(raw.shape, (1000, 7))
+        self.assertEqual(int(raw.isna().sum().sum()), 50)
+        self.assertEqual(data.shape, (951, 7))
+        self.assertEqual(data.species.value_counts().to_dict(), {"Adelie": 438, "Gentoo": 273, "Chinstrap": 240})
+        self.assertEqual(int(data.isna().sum().sum()), 0)
+        pd.testing.assert_frame_equal(data, raw.loc[~raw.isna().any(axis=1)])
         self.assertEqual(int(data.duplicated().sum()), 0)
         self.assertEqual(data.index.name, "source_row")
         self.assertNotIn("species", FEATURE_NAMES)
 
-    def test_loader_rejects_invalid_target(self) -> None:
+    def test_loader_drops_missing_target_and_rejects_unknown_target(self) -> None:
         data = load_penguins_dataset()
         for invalid in [None, "unknown"]:
             with self.subTest(invalid=invalid), tempfile.TemporaryDirectory() as temporary:
@@ -46,8 +52,20 @@ class PenguinsDatasetTests(unittest.TestCase):
                 path = Path(temporary) / "invalid.zip"
                 with ZipFile(path, "w") as archive:
                     archive.writestr(DATA_MEMBER, data.to_csv(index=False))
-                with self.assertRaises(ValueError):
-                    load_penguins_dataset(path)
+                if invalid is None:
+                    clean = load_penguins_dataset(path)
+                    self.assertEqual(len(clean), len(data) - 1)
+                    self.assertNotIn(0, clean.index)
+                    self.assertFalse(clean.isna().any().any())
+                else:
+                    with self.assertRaises(ValueError):
+                        load_penguins_dataset(path)
+
+    def test_removal_rejects_table_with_no_complete_rows(self) -> None:
+        data = load_raw_penguins_dataset()
+        data.loc[:, "body_mass_g"] = np.nan
+        with self.assertRaisesRegex(ValueError, "Complete"):
+            remove_incomplete_rows(data)
 
 
 class EnsembleBoundaryTests(unittest.TestCase):
@@ -57,40 +75,38 @@ class EnsembleBoundaryTests(unittest.TestCase):
         cls.X = data[FEATURE_NAMES]
         cls.y = data.species
 
-    def test_oof_imputation_is_fitted_only_on_fold_training_rows(self) -> None:
-        # A different median in every fold makes full-train preprocessing detectable.
+    def test_oof_encoding_is_fitted_only_on_fold_training_rows(self) -> None:
+        # Unique categories expose any fitting of the encoder on OOF-validation rows.
         X = self.X.iloc[:90].copy()
         y = self.y.iloc[:90]
-        X.loc[:, "body_mass_g"] = np.arange(len(X), dtype=float) ** 2
-        X.loc[X.index[::7], "body_mass_g"] = np.nan
+        X.loc[:, "island"] = [f"source_{index}" for index in X.index]
         folds = list(build_folds().split(X, y))
         stack = build_stacking(build_base_models())
         result = cross_validate(stack.estimators[0][1], X, y, cv=folds, return_estimator=True)
         for estimator, (train_positions, valid_positions) in zip(result["estimator"], folds):
-            imputer = estimator.named_steps["preprocessing"].named_transformers_["numeric"]
-            expected = X.iloc[train_positions][NUMERIC_FEATURES].median().to_numpy()
-            np.testing.assert_allclose(imputer.statistics_, expected)
-            self.assertNotEqual(imputer.statistics_[-1], X.body_mass_g.median())
+            preprocessing = estimator.named_steps["preprocessing"]
+            encoder = preprocessing.named_transformers_["categorical"]
+            self.assertEqual(set(encoder.categories_[0]), set(X.iloc[train_positions].island))
+            self.assertFalse(set(encoder.categories_[0]) & set(X.iloc[valid_positions].island))
+            transformed = preprocessing.transform(X.iloc[valid_positions])
+            np.testing.assert_array_equal(transformed[:, :4], X.iloc[valid_positions][NUMERIC_FEATURES].to_numpy())
             self.assertFalse(set(train_positions) & set(valid_positions))
 
-    def test_blending_keeps_base_training_statistics_and_class_order(self) -> None:
+    def test_blending_keeps_base_training_categories_and_class_order(self) -> None:
         X_base, X_valid, y_base, y_valid = train_test_split(
             self.X, self.y, test_size=0.30, random_state=42, stratify=self.y,
         )
         X_base, X_valid = X_base.copy(), X_valid.copy()
-        X_base.loc[:, "body_mass_g"] = 100.0
-        X_base.loc[X_base.index[0], "body_mass_g"] = np.nan
-        X_valid.loc[:, "body_mass_g"] = 99999.0
         X_valid.loc[:, "island"] = "unseen_validation_island"
         templates = build_base_models()
         blend = fit_blending(templates, X_base, y_base, X_valid, y_valid)
         self.assertEqual(blend.validation_features.shape, (len(X_valid), 9))
         self.assertEqual(blend.validation_features.index.tolist(), X_valid.index.tolist())
         self.assertEqual(blend.meta_model.named_steps["standardscaler"].n_samples_seen_, len(X_valid))
+        self.assertEqual(blend.base_models[0][1].named_steps["classifier"].tree_.n_node_samples[0], len(X_base))
         for (_, fitted), (_, template) in zip(blend.base_models, templates):
             preprocessing = fitted.named_steps["preprocessing"]
-            self.assertEqual(preprocessing.named_transformers_["numeric"].statistics_[-1], 100.0)
-            encoder = preprocessing.named_transformers_["categorical"].named_steps["onehotencoder"]
+            encoder = preprocessing.named_transformers_["categorical"]
             self.assertNotIn("unseen_validation_island", encoder.categories_[0])
             self.assertFalse(hasattr(template.named_steps["preprocessing"], "transformers_"))
         probability = ordered_probabilities(blend, X_valid.iloc[:10])
@@ -110,7 +126,7 @@ class EnsembleBoundaryTests(unittest.TestCase):
         X_test.loc[:, "island"] = "test_only_island"
         # One shallow tree keeps this boundary check small while exercising real OOF fitting.
         stack = build_stacking([("dt", clone(build_base_models()[0][1]))]).fit(X_train, y_train)
-        encoder = stack.estimators_[0].named_steps["preprocessing"].named_transformers_["categorical"].named_steps["onehotencoder"]
+        encoder = stack.estimators_[0].named_steps["preprocessing"].named_transformers_["categorical"]
         self.assertNotIn("test_only_island", encoder.categories_[0])
         probability = ordered_probabilities(stack, X_test)
         self.assertEqual(probability.shape, (len(X_test), 3))

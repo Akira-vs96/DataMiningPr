@@ -10,5 +10,10 @@
   "random_state": 42,
   "test_size": 0.3,
   "blending_validation_fraction_of_train": 0.3,
-  "stacking_folds": 5
+  "stacking_folds": 5,
+  "missing_values_policy": "drop_rows_before_split",
+  "rows_before_cleaning": 1000,
+  "rows_removed": 49,
+  "rows_after_cleaning": 951,
+  "processed_dataset": "data/processed/penguins_clean.csv"
 }
